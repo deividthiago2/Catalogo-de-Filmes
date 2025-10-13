@@ -43,8 +43,17 @@
         const listaFilmesContainer = document.getElementById('lista-filmes');
 
         //-------------------------------------------------------------------
-        // FUNÇÃO DE REMOÇÃO
+        // FUNÇÃO DE REMOÇÃO (Mantida da Fase 1)
         //-------------------------------------------------------------------
+        function removerFilme(indice, elementoDOM) {
+            catalogo.splice(indice, 1);
+            elementoDOM.remove();
+
+            if (catalogo.length === 0) {
+                listaFilmesContainer.innerHTML = '<p>Nenhum filme cadastrado ainda.<p>';
+            }
+        }
+        
         /**
          * Remova um filme do array de dados e do elemento HTML na
          * @param {number} indice - A posição do filme no array 'catalogo'.
