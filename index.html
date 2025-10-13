@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalogo de Filmes - Fase 1: Cadastro Manual (DOM Básico)</title>
+    <title>Catálogo de Filmes - Fase 2: Consumo de API</title>
 
     <link rel="stylesheet" href="style.css">
 
@@ -15,13 +15,8 @@
     <form id="cadastro-filme">
         <h2>Adicionar Novo FIlme</h2>
         <div>
-            <label for="título">Título do Filme</label>
+            <label for="titulo">Título do Filme</label>
             <input id="text" id="titulo" required>
-        </div>
-
-        <div>
-            <label for="sinopse">Sinopse:</label>
-            <textarea id="sinopse" required></textarea>
         </div>
 
         <button type="submit">Adicionar Filme</button>
@@ -104,6 +99,27 @@
                     const removerBotao = document.createElement('button');
                     removerBotao.textContent = 'Remover';
                     removerBotao.classList.add('btn-remover');
+
+                    //B. Definição do evento de remoção (addEventListner)
+                    //Anexa a função 'removerFilme' ao clique do botão.
+                    removerBotao.addEventListener('click', () => {
+                        // Ao clicar,chamamos a função, passando o indice (posição) é a propria <div> (filmeDiv).
+                            removerFilme(indice, filmeDiv)
+                    });
+
+                    //C. Anexar elementos (appendChild)
+                    // Montar a estrutura hierárquica:
+                    //B, Definição do evento de remoção (addEventListener)
+                    // Anexa a função 'removerFilme' ao clique do botão.
+                    removerBotao.addEventListener('click', () => {
+                        removerFilme (indice, filmeDiv);
+                    });
+
+                    //C. Anexar elementos (appendChild)
+                    //Montar a estrutura hierarquica:
+                    // filmeDiv
+                    //Titulo h3
+                    //Sinopse
 
                     
                 } 
