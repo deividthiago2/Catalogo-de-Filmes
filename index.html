@@ -31,14 +31,15 @@
     </div>
 
     <script>
+        // A CHAVE DA API OMDb (Substitua esta string pela sua chave real!)
+        const API_KEY = 'SUA_CHAVE_OMDB-AQUI';
+
         // 1. ARMAZENAMENTO DE DADOS
-        // Array global que irá guardar todos os filmes como Objetos.
-        //Ex [{ titulo: 'Filme X', sinopse: 'Sinopse Y'}]
-        const catalogo= [];
+        const catalogo = [];
 
         //2. CAPTURA DE ELEMENTOS DO DOM (Document Object Model)
-        // Capturamos os elementos HTML que vamos interagir, usando seus IDs.
         const form = document.getElementById('cadastro-filme');
+        const tituloInput = document.getElementById('titulo');
         const listaFilmesContainer = document.getElementById('lista-filmes');
 
         //-------------------------------------------------------------------
