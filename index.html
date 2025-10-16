@@ -54,85 +54,88 @@
             }
         }
         
-        /**
-         * Remova um filme do array de dados e do elemento HTML na
-         * @param {number} indice - A posição do filme no array 'catalogo'.
-         * @param {HTMLElement} elementoDOM - O elemento <div> do fime a ser removido da tela.
-         */
-        function removerFilme(indice, elementoDOM)
-            // A. REMOÇÃO DO ARRAY (Lógica)
-            // slice(indice, 1) remove 1 elemento a partir da posição 'indice'.
-            // Isso atualiza o array 'catalogo'.
-            catalogo.splice(indice, 1);
-
-            //B. REMOÇÃO DO DOM (Visual)
-            //O método .remove() retira o elemento HTML da visualização do usuário.
-            elementoDOM.remove();
-
-            //Opcional: Atualize a mensagem da lísta se estiver vaia
-            if(catalogo.length === 0) {
-                listaFilmesContainer.innerHTML = '<p>Nenhum filme cadastrado ainda.</p>';
-                
+        //----------------------------------------------------------------------
+        // FUNÇÃO DE RENDERIZAÇÃO (Adaptada para incluir o poster)
+        //----------------------------------------------------------------------
+        function renderizarFilme(filme, indice) {
+            if (catalogo.length === 1) {
+                listaFilmesContainer.innerHTML = '';
             }
 
-            console.log(`Filme no indice ${indice} removido. Catalogo atualizado:` catalogo);
+            const filmeDiv = document.createElement('div');
+            filmeDiv.classList.add('filme-item');
 
-            //-----------
-            //Função de Rendeziração
-            //-----------
-            /**
-             * Cria e exibe a estrutura HTML de um filme na lista.
-             * @param (object) filme - o objeto (titulo, sinopse) do filme.
-             * @param (number) indice - o indice atual do filme no array.
-             */
-            function renderizarFilme (filme, indice) {
-                //Remove a mensagem inicial se for o primeiro filme
-                if(catalogo.length === 1) {
-                    listaFilmesContainer.innerHTML = '';
+            // A. Elemento Imagem (Póster)
+            const imagemPoster = document.createElement('img');
+            imagemPoster.src = filme.poster && filme.poster !== 'N/A'
+                               ? filme.poster
+                               : 'https://via.placeholder.com/100x150?text=Poster=Nao+Disponivel';
+            imagemPoster.alt = `Póster do filme ${filme.titulo}`;
+            imagemPoster.classList.add('filme-poster');
+
+            // B. Elementos de Texto e Info
+            const infoDiv = document.createElement('div');
+            infoDiv.classList.add('filme-info');
+
+            const tituloH3 = document.createElement('h3');
+            tituloH3.textContent = filme.titulo;
+
+            const sinopseP = document.createElement('p');
+            sinopseP.textContent = filme.sinopse;
+
+            const removerBotao = document.createElement('button');
+            removerBotao.textContent = 'Remover';
+            removerBotao.classList.add('bnt-remover');
+
+            // C. Evento de Remoção
+            removerBotao.addEventListener('click', () => {
+                const indiceAtual = catalogo.findIndex(f => f.titulo === filme.titulo);
+                if (indiceAtual > -1) {
+                    removerFilme(indiceAtual, filmeDiv);
                 }
+            });
 
-                // A. Criação de elemetos HTML (document.createElement)
+            // D. Montagem do DOM
+            infoDiv.appendChild(tituloH3);
+            infoDiv.appendChild(sinopseP);
+            infoDiv.appendChild(removerBotao);
 
-                // Criar a <div> que será ser o o container de cada filme.
-                    const filmeDiv = document.createElement('div');
-                    filmeDiv.classList.add('filme-item'); // Adicionar uma classe para estilização
+            filmeDiv.appendChild(imagemPoster);
+            filmeDiv.appendChild(infoDiv);
 
-                    // criar o <h3> para o titulo e define o seu texto.
-                    const tituloH3 = document.createElement('h3');
-                    tituloH3.textContent filme.titulo;
+            listaFilmesContainer.appendChild(filmeDiv);
+        }
 
-                    //Criar o <p> para a sinopse e define seu texto
-                    const sinopsep = document.createElement('p');
-                    sinopsep.textContent = filme.sinopse;
+        //---------------------------------------------------------
+        //FUNÇÃO PRINCIPAL DE ADIÇÃO (Assíncrona para a API)
+        //---------------------------------------------------------
+        async function adicionarFilme(evento) {
+            evento.preventDefault();
 
-                    //Criar botão de remoção
-                    const removerBotao = document.createElement('button');
-                    removerBotao.textContent = 'Remover';
-                    removerBotao.classList.add('btn-remover');
+            const titulo = tituloInput.value.trim();
+            if (!titulo) return;
 
-                    //B. Definição do evento de remoção (addEventListner)
-                    //Anexa a função 'removerFilme' ao clique do botão.
-                    removerBotao.addEventListener('click', () => {
-                        // Ao clicar,chamamos a função, passando o indice (posição) é a propria <div> (filmeDiv).
-                            removerFilme(indice, filmeDiv)
-                    });
+            const tituloFormatado = encodeURIComponent(titulo);
+            const url = `https://www.omdbapi.com/?apikey=${API_KEY}&t=${tituloFormatado}`;
 
-                    //C. Anexar elementos (appendChild)
-                    // Montar a estrutura hierárquica:
-                    //B, Definição do evento de remoção (addEventListener)
-                    // Anexa a função 'removerFilme' ao clique do botão.
-                    removerBotao.addEventListener('click', () => {
-                        removerFilme (indice, filmeDiv);
-                    });
+            try {
+                const resposta = await fetch(url);
+                const dadosDoFilme = await resposta.json();
 
-                    //C. Anexar elementos (appendChild)
-                    //Montar a estrutura hierarquica:
-                    // filmeDiv
-                    //Titulo h3
-                    //Sinopse
+                if (dadosDoFilme.Response === "True") {
 
-                    
-                } 
+                    const novoFilme = {
+                        titulo: dadosDoFilme.title,
+                        sinopse: dadosDoFilme.Plot,
+                        poster: dadosDoFilme.Poster,
+                    };
+
+                    catalogo.push(novoFilme);
+                    renderizarFilme(novoFilme, catalogo.length - 1);
+                }
+            }
+            
+        }
         
     </script>
         
