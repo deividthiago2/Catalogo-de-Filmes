@@ -69,7 +69,7 @@
             const imagemPoster = document.createElement('img');
             imagemPoster.src = filme.poster && filme.poster !== 'N/A'
                                ? filme.poster
-                               : 'https://via.placeholder.com/100x150?text=Poster+Nao+Disponivel';
+                               : 'http://www.omdbapi.com/?i=tt3896198&apikey=48435082';
             imagemPoster.alt = `Póster do filme ${filme.titulo}`;
             imagemPoster.classList.add('filme-poster');
 
