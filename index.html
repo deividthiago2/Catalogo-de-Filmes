@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Filmes - Fase 2: Consumo de API</title>
-
     <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
     
@@ -18,14 +16,12 @@
             <label for="titulo">Título do Filme</label>
             <input type="text" id="titulo" required>
         </div>
-
         <button type="submit">Buscar e Adicionar Filme</button>
     </form>
 
     <hr>
 
     <h2>Minha Lista de Filmes</h2>
-    
     <div id="lista-filmes">
          <p>Nenhum filme cadastrado ainda.</p>
     </div>
@@ -33,22 +29,21 @@
     <script>
         // A CHAVE DA API OMDb (Substitua esta string pela sua chave real!)
         const API_KEY = '48435082';
-
-        // 1. ARMAZENAMENTO DE DADOS
-        const catalogo = [];
+        let catalogo = JSON.parse(localStore.getItem('catalogo')) || [];
 
         //2. CAPTURA DE ELEMENTOS DO DOM (Document Object Model)
         const form = document.getElementById('cadastro-filme');
         const tituloInput = document.getElementById('titulo');
         const listaFilmesContainer = document.getElementById('lista-filmes');
 
-        //-------------------------------------------------------------------
-        // FUNÇÃO DE REMOÇÃO (Mantida da Fase 1)
-        //-------------------------------------------------------------------
+        //salvar no localsotre
+        function salvarCatalogo() {
+            localStore.setItem('catalogo', JSON.stringify(catalogo));
+        }
+
         function removerFilme(indice, elementoDOM) {
             catalogo.splice(indice, 1);
             elementoDOM.remove();
-
             if (catalogo.length === 0) {
                 listaFilmesContainer.innerHTML = '<p>Nenhum filme cadastrado ainda.<p>';
             }
