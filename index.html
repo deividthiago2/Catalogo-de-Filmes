@@ -53,7 +53,7 @@
         // FUNÇÃO DE RENDERIZAÇÃO (Adaptada para incluir o poster)
         //----------------------------------------------------------------------
         function renderizarFilme(filme, indice) {
-            if (catalogo.length === 1) {
+            if (catalogo.length === 1 && listaFilmesContainer.querySelector('p')) {
                 listaFilmesContainer.innerHTML = '';
             }
 
