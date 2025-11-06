@@ -82,6 +82,9 @@
             const trailerLink = document.createElement('a');
             const termoBusca = encodeURIComponent(`${filme.titulo} trailer oficial`);
             trailerLink.href = `https://www.youtube.com/results?search_query=${termoBusca}`;
+            trailerLink.target = '_blank';
+            trailerLink.textContent = 'Ver trailer (Youtube)';
+            trailerLink.classList.add('bnt-trailer');
             
 
             const removerBotao = document.createElement('button');
