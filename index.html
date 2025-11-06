@@ -150,8 +150,17 @@
             form.reset();
         }
 
+        //recarregar lista ao abrir a pagina
+        function carregarCatalogo() {
+            if(catalogo.length > 0) {
+                listaFilmesContainer.innerHTML = '';
+                catalogo.forEach((filme, i) => renderizarFilme(filme, i));
+            }
+        }
+
         // 6. ESCUTANDO O EVENTO DO FORMULÁRIO
         form.addEventListener('submit', adicionarFilme);
+        carregarCatalogo();
     </script>
 </body>
 </html>
