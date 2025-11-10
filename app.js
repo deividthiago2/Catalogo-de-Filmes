@@ -1,0 +1,137 @@
+// A CHAVE DA API OMDb (Substitua esta string pela sua chave real!)
+        const API_KEY = '48435082'; // Substitua pela sua chave da OMDb
+        let catalogo = JSON.parse(localStorage.getItem('catalogo')) || [];
+
+        // 2. CAPTURA DE ELEMENTOS DO DOM
+        const form = document.getElementById('cadastro-filme');
+        const tituloInput = document.getElementById('titulo');
+        const listaFilmesContainer = document.getElementById('lista-filmes');
+
+        // Salvar no localStorage
+        function salvarCatalogo() {
+            localStorage.setItem('catalogo', JSON.stringify(catalogo));
+        }
+
+        // Remover filme
+        function removerFilme(indice, elementoDOM) {
+            catalogo.splice(indice, 1);
+            elementoDOM.remove();
+            salvarCatalogo(); // Salvar após remoção
+            if (catalogo.length === 0) {
+                listaFilmesContainer.innerHTML = '<p>Nenhum filme cadastrado ainda.</p>';
+            }
+        }
+
+        // Renderizar filme
+        function renderizarFilme(filme, indice) {
+            if (catalogo.length === 1 && listaFilmesContainer.querySelector('p')) {
+                listaFilmesContainer.innerHTML = '';
+            }
+
+            const filmeDiv = document.createElement('div');
+            filmeDiv.classList.add('filme-item');
+
+            // Imagem do pôster
+            const imagemPoster = document.createElement('img');
+            imagemPoster.src = filme.poster && filme.poster !== 'N/A'
+                               ? filme.poster
+                               : 'http://www.omdbapi.com/?i=tt3896198&apikey=48435082';
+            imagemPoster.alt = `Póster do filme ${filme.titulo}`;
+            imagemPoster.classList.add('filme-poster');
+
+            // Informações do filme
+            const infoDiv = document.createElement('div');
+            infoDiv.classList.add('filme-info');
+
+            const tituloH3 = document.createElement('h3');
+            tituloH3.textContent = filme.titulo;
+
+            const sinopseP = document.createElement('p');
+            sinopseP.textContent = filme.sinopse || 'Sinopse não disponível';
+
+            // Link para o trailer
+            const trailerLink = document.createElement('a');
+            const termoBusca = encodeURIComponent(`${filme.titulo} trailer oficial`);
+            trailerLink.href = `https://www.youtube.com/results?search_query=${termoBusca}`;
+            trailerLink.target = '_blank';
+            trailerLink.textContent = 'Ver trailer (Youtube)';
+            trailerLink.classList.add('bnt-trailer');
+
+            // Botão de remoção
+            const removerBotao = document.createElement('button');
+            removerBotao.textContent = 'Remover';
+            removerBotao.classList.add('bnt-remover');
+
+            // Evento de remoção
+            removerBotao.addEventListener('click', () => {
+                const indiceAtual = catalogo.findIndex(f => f.titulo === filme.titulo);
+                if (indiceAtual > -1) {
+                    removerFilme(indiceAtual, filmeDiv);
+                }
+            });
+
+            // Montagem do DOM
+            infoDiv.appendChild(tituloH3);
+            infoDiv.appendChild(sinopseP);
+            infoDiv.appendChild(trailerLink);
+            infoDiv.appendChild(removerBotao);
+
+            filmeDiv.appendChild(imagemPoster);
+            filmeDiv.appendChild(infoDiv);
+
+            listaFilmesContainer.appendChild(filmeDiv);
+        }
+
+        // Função principal de adição (assíncrona para a API)
+        async function adicionarFilme(evento) {
+            evento.preventDefault();
+
+            const titulo = tituloInput.value.trim();
+            if (!titulo) {
+                alert('Por favor, insira o título de um filme.');
+                return;
+            }
+
+            const tituloFormatado = encodeURIComponent(titulo);
+            const url = `https://www.omdbapi.com/?apikey=${API_KEY}&t=${tituloFormatado}`;
+
+            try {
+                const resposta = await fetch(url);
+                const dadosDoFilme = await resposta.json();
+
+                if (dadosDoFilme.Response === "True") {
+                    const novoFilme = {
+                        titulo: dadosDoFilme.title,
+                        sinopse: dadosDoFilme.Plot,
+                        poster: dadosDoFilme.Poster,
+                    };
+
+                    catalogo.push(novoFilme);
+                    renderizarFilme(novoFilme, catalogo.length - 1);
+                    salvarCatalogo();  // Salvar após adicionar
+
+                                } else {
+                    alert(`Filme não encontrado na OMDb: "${titulo}".`);
+                }
+
+            } catch (error) {
+                alert('Ocorreu um erro ao tentar buscar o filme na API. Verifique sua chave.');
+                console.error('Erro de Fetch:', error);
+            }
+
+            form.reset();
+        }
+
+        // Carregar catálogo ao abrir a página
+        function carregarCatalogo() {
+            if (catalogo.length > 0) {
+                listaFilmesContainer.innerHTML = '';
+                catalogo.forEach((filme, i) => renderizarFilme(filme, i));
+            }
+        }
+
+        // Evento de envio do formulário
+        form.addEventListener('submit', adicionarFilme);
+
+        // Recarregar lista ao abrir a página
+        carregarCatalogo();
