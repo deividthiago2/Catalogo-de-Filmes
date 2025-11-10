@@ -142,3 +142,55 @@ a {
     margin-bottom: 10px;
     color: #f0f0f0;
 }
+
+.botao-adicionar {
+    background-color: #00e0b3; /* Cor de destaque */
+    color: #1f1f1f;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: backgroud-color 0.2s;
+}
+
+.botao-adicionar:hover {
+    background-color: #00e0b3;
+}
+
+
+/* --- 6. RESPONSIVIDADE (Ajustes para Telas Menores/Celulares) --- */
+@media (max-width: 768px) {
+
+    /* Hader (Oculta links no mobile, mostra o botão do menu) */
+    .nav-menu a {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block; /*mostra o ícone de menu hamburguer */
+    }
+
+    /* Controles (Altera a order, a busca fica no topo) */
+    .controls-section {
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+    }
+
+    .search-bar {
+        width: 100%;
+        max-width: none;
+    }
+
+    .filter-dropdown {
+        width: 100%;
+    }
+
+    /* Lista de Filmes (Layout com menos colunas para telas menores) */
+    .lista-filme {
+        /* No celular, a largura mínima para o card é maior,
+        forçando 1 ou 2 colunas */
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
