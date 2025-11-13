@@ -114,5 +114,11 @@ searchInput.addEventListener('input', (event) => {
     // Define um novo timeout para buscar após 500 milisegundos (0.5s)
     searchTimeout = setTimeout(() => {
         buscarFilmes(event.target.value.trim());
-    })
-})
+    }, 500);
+});
+
+// Exemplo de carregamento inicial
+document.addEventListener('DOMContainerLoaded', () => {
+    //Buscar filmes ao carregar a página (EX: eo mais recentes)
+    buscarFilmes('popular');
+});
