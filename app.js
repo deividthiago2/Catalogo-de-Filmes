@@ -1,5 +1,5 @@
 //Substitua pela sua chave REAL da OMDB API
-const OMDB_API_KEY = 'coloque sua chave aqui';
+const OMDB_API_KEY = '48435082';
 const listaFilmesContainer = document.querySelector('.lista-filmes');
 const searchInput = document.querySelector('.search-input');
 
