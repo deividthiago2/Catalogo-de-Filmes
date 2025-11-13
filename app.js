@@ -104,3 +104,15 @@ function buscarEExibirDetalhes(imdbID) {
 }
 
 
+// --- E. Implementação do DEBOUNCE na busca ---
+// Isso evita chamar a API a cada tecla digitada.
+let searchTimeout;
+searchInput.addEventListener('input', (event) => {
+    //Limpar o timeout anterior para evitar chamadas múltiplas
+    clearTimeout(searchTimeout);
+
+    // Define um novo timeout para buscar após 500 milisegundos (0.5s)
+    searchTimeout = setTimeout(() => {
+        buscarFilmes(event.target.value.trim());
+    })
+})
